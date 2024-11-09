@@ -31,9 +31,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          - POSTGRES_USER: ${{ secrets.SERVICE_CONATINER_POSTGRES_USER }}
-          - POSTGRES_PASSWORD: ${{ secrets.SERVICE_CONATINER_POSTGRES_PASSWORD }}
-          - POSTGRES_DB: app_db
+          POSTGRES_USER: ${{ secrets.SERVICE_CONATINER_POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.SERVICE_CONATINER_POSTGRES_PASSWORD }}
+          POSTGRES_DB: app_db
         ports:
           - 5432:5432
 
