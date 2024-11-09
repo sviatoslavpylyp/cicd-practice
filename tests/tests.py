@@ -1,18 +1,20 @@
 import unittest
 from app.dao import UserDAO
 
-
 class TestUserDAO(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # Setup UserDAO instance once for all tests, assuming the test DB is ready
+        """Setup UserDAO instance and initialize the schema before tests run."""
         cls.user_dao = UserDAO()
+
+        # Initialize the schema and tables
+        cls.user_dao._initialize_schema()
 
     def setUp(self):
         """Clean up the users table before each test to ensure a fresh state."""
         with self.user_dao.conn.cursor() as cursor:
-            cursor.execute("DELETE FROM users;")
+            cursor.execute("DELETE FROM app_db.users;")  # Specify the schema
             self.user_dao.conn.commit()
 
     def test_create_user_successfully(self):
@@ -43,10 +45,9 @@ class TestUserDAO(unittest.TestCase):
     def tearDownClass(cls):
         """Clean up resources after all tests."""
         with cls.user_dao.conn.cursor() as cursor:
-            cursor.execute("DELETE FROM users;")
+            cursor.execute("DELETE FROM app_db.users;")  # Specify the schema
             cls.user_dao.conn.commit()
         cls.user_dao.conn.close()
-
 
 if __name__ == '__main__':
     unittest.main()
