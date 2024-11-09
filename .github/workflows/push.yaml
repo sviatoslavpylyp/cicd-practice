@@ -66,11 +66,6 @@ jobs:
           sleep 3
         done
 
-    - name: Load database schema
-      run: |
-        PGPASSWORD=${{ secrets.SERVICE_CONTAINER_POSTGRES_PASSWORD }} psql -h localhost -p 5432 -U ${{ secrets.SERVICE_CONTAINER_POSTGRES_USER }} -d ${{ env.DB_NAME }} -f init_db.sql
-
-
     - name: Run tests
       env:
         DB_USER: ${{ secrets.SERVICE_CONATINER_POSTGRES_USER }}

@@ -15,6 +15,22 @@ class UserDAO:
         # Use the connection URL to connect to the database
         self.conn = psycopg2.connect(db_url)
 
+    def _initialize_schema(self):
+        """Create schema and tables if they do not already exist."""
+        with self.conn.cursor() as cursor:
+            # Create schema if it doesn't exist
+            cursor.execute("CREATE SCHEMA IF NOT EXISTS app_schema;")
+
+            # Create users table within the schema
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS app_schema.users (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                email VARCHAR(100) UNIQUE NOT NULL
+            );
+            """)
+            self.conn.commit()
+
     def create_user(self, name, email):
         """Inserts a new user into the users table."""
         try:
