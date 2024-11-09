@@ -19,11 +19,11 @@ class UserDAO:
         """Create schema and tables if they do not already exist."""
         with self.conn.cursor() as cursor:
             # Create schema if it doesn't exist
-            cursor.execute("CREATE SCHEMA IF NOT EXISTS app_schema;")
+            cursor.execute("CREATE SCHEMA IF NOT EXISTS app_db;")
 
             # Create users table within the schema
             cursor.execute("""
-            CREATE TABLE IF NOT EXISTS app_schema.users (
+            CREATE TABLE IF NOT EXISTS app_db.users (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(100) NOT NULL,
                 email VARCHAR(100) UNIQUE NOT NULL
