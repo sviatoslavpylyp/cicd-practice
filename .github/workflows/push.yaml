@@ -59,6 +59,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Wait for PostgreSQL to be ready
+      run: |
+        until pg_isready -h localhost -p 5432; do
+          echo "Waiting for PostgreSQL..."
+          sleep 3
+        done
+
+    - name: Load database schema
+      env:
+        PGPASSWORD: ${{ secrets.SERVICE_CONTAINER_POSTGRES_PASSWORD }}
+      run: |
+        psql -h localhost -p 5432 -U ${{ secrets.SERVICE_CONTAINER_POSTGRES_USER }} -d ${{ env.DB_NAME }} -f init_db.sql
+
+
     - name: Run tests
       env:
         DB_USER: ${{ secrets.SERVICE_CONATINER_POSTGRES_USER }}
