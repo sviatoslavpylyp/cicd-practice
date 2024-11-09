@@ -1,6 +1,5 @@
 import unittest
 from app.dao import UserDAO
-from psycopg2.errors import UniqueViolation
 
 
 class TestUserDAO(unittest.TestCase):
