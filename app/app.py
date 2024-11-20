@@ -1,19 +1,21 @@
-# app.py
-
-from flask import Flask
-from controller import create_user, get_all_users
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-# POST endpoint for adding a user
-@app.route('/user', methods=['POST'])
-def add_user():
-    return create_user()
+# Endpoint 1: Welcome message
+@app.route("/")
+def home():
+    return jsonify({"message": "Welcome to the Flask App!"})
 
-# GET endpoint for fetching all users
-@app.route('/users', methods=['GET'])
-def list_users():
-    return get_all_users()
+# Endpoint 2: Static user data
+@app.route("/users", methods=["GET"])
+def get_users():
+    users = [
+        {"id": 1, "name": "Alice", "email": "alice@example.com"},
+        {"id": 2, "name": "Bob", "email": "bob@example.com"},
+        {"id": 3, "name": "Charlie", "email": "charlie@example.com"}
+    ]
+    return jsonify({"users": users})
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
