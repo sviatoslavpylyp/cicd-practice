@@ -44,6 +44,9 @@ jobs:
     name: "Bump version and create changelog with commitizen"
     needs: install_requirements
 
+    outputs:
+      semantic_versioning: ${{ steps.cz.outputs.version }}
+
     steps:
       - name: Check out
         uses: actions/checkout@v3
@@ -60,7 +63,6 @@ jobs:
       - name: Print Version
         run: |
           echo "Bumped to version ${{ steps.cz.outputs.version }}"
-          echo "SEMANTIC_VERSIONING=${{ steps.cz.outputs.version }}" >> $GITHUB_ENV
 
 
   build_and_deploy_docker_image:
@@ -72,7 +74,7 @@ jobs:
 
     steps:
       - name: extract
-        run: echo ${{ env.SEMANTIC_VERSIONING }}
+        run: echo ${{ needs.create-semantic-version.outputs.semantic_versioning }}
 
       - name: pre actions/checkout
         uses: actions/checkout@v4
@@ -98,4 +100,4 @@ jobs:
           push: true
           context: .
           file: ${{ env.DOCKERFILE_NAME }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/py-app:${{ env.SEMANTIC_VERSIONING }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/py-app:${{ needs.create-semantic-version.outputs.semantic_versioning }}
