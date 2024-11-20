@@ -42,6 +42,7 @@ jobs:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     name: "Bump version and create changelog with commitizen"
+    needs: install_requirements
 
     steps:
       - name: Check out
@@ -94,4 +95,4 @@ jobs:
           push: true
           context: .
           file: ${{ env.DOCKERFILE_NAME }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/py-app:${{ env.SEMANTIC_VERSION }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/py-app:${{ needs.create-semantic-version.outputs.SEMANTIC_VERSION }}
