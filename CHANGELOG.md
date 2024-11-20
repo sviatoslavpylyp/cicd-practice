@@ -1,3 +1,9 @@
+## 1.1.0 (2024-11-20)
+
+### Feat
+
+- check workflow
+
 ## 1.0.0 (2024-11-20)
 
 ### BREAKING CHANGE
