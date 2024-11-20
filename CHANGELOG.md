@@ -1,3 +1,9 @@
+## 1.0.0 (2024-11-20)
+
+### BREAKING CHANGE
+
+- check workflow
+
 ## 0.3.1 (2024-11-20)
 
 ### Fix
