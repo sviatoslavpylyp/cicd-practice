@@ -9,6 +9,7 @@ env:
 jobs:
   install_requirements:
     runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
 
     steps:
       - name: pre actions/checkout
@@ -39,7 +40,6 @@ jobs:
 
 
   create-semantic-version:
-    if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     name: "Bump version and create changelog with commitizen"
     needs: install_requirements
