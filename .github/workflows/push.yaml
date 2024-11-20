@@ -60,7 +60,7 @@ jobs:
       - name: Print Version
         run: |
           echo "Bumped to version ${{ steps.cz.outputs.version }}"
-          echo "semantic_version=${{ steps.cz.outputs.version }}" >> $GITHUB_ENV
+          echo "SEMANTIC_VERSIONING=${{ steps.cz.outputs.version }}" >> $GITHUB_ENV
 
 
   build_and_deploy_docker_image:
@@ -95,4 +95,4 @@ jobs:
           push: true
           context: .
           file: ${{ env.DOCKERFILE_NAME }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/py-app:${{ needs.create-semantic-version.outputs.semantic_version }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/py-app:${{ env.SEMANTIC_VERSIONING }}
