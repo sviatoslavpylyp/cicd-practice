@@ -1,5 +1,2 @@
-[tool.semantic_release]
-version_source = "tag"
-upload_to_pypi = false
-version_variable = "version.py:__version__"
-changelog_file = "CHANGELOG.md"
+[tool.commitizen]
+version = "0.1.0"
