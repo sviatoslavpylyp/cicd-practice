@@ -1,0 +1,29 @@
+# build stage
+FROM python:3.9-slim AS build
+
+WORKDIR /app
+
+# Copy the necessary files
+COPY requirements.txt .
+
+# Copy the pip cache from the host machine (this will be passed in during build)
+ARG PIP_CACHE_DIR=/root/.cache/pip
+
+# Ensure pip uses the cache directory
+RUN pip install --no-cache-dir --cache-dir $PIP_CACHE_DIR -r requirements.txt
+
+COPY app .
+
+# runtime stage
+FROM python:3.9-slim AS runtime
+
+WORKDIR /app
+
+COPY --from=build /app /app
+
+EXPOSE 5000
+
+ENV FLASK_APP=app.py
+
+# Command to run the app
+CMD ["flask", "run", "--host", "0.0.0.0"]
