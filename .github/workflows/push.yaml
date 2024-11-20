@@ -95,4 +95,3 @@ jobs:
           context: .
           file: ${{ env.DOCKERFILE_NAME }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/py-app:prod
-
