@@ -1,5 +1,5 @@
 [tool.semantic_release]
 version_source = "tag"
 upload_to_pypi = false
-version_variable = "version.py"
+version_variable = "version.py:__version__"
 changelog_file = "CHANGELOG.md"
