@@ -70,7 +70,7 @@ jobs:
     needs: create-semantic-version
 
     env:
-      DOCKERFILE_NAME: 'Dockerfile-gh-actions'
+      DOCKERFILE_NAME: 'Dockerfile'
 
     steps:
       - name: extract
