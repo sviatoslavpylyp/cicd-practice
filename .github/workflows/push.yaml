@@ -71,6 +71,9 @@ jobs:
       DOCKERFILE_NAME: 'Dockerfile-gh-actions'
 
     steps:
+      - name: extract
+        run: echo ${{ env.SEMANTIC_VERSIONING }}
+
       - name: pre actions/checkout
         uses: actions/checkout@v4
 
