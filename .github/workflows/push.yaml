@@ -7,86 +7,91 @@ env:
   PYTHON_VERSION: '3.13'
 
 jobs:
-#  install_requirements:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: pre actions/checkout
-#        uses: actions/checkout@v4
-#
-#      - name: pre actions/setup-python
-#        uses: actions/setup-python@v5
-#        with:
-#          python-version: ${{ env.PYTHON_VERSION }}
-#
-#      - name: check if cached requirements.txt exist
-#        id: cached_requirements
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.cache/pip
-#          key: ${{ runner.os }}-requirements-${{ hashFiles('./requirements.txt') }}
-#
-#      - name: install requirements.txt
-#        if: steps.cached_requirements.outputs.cache-hit != 'true'
-#        run: pip install --no-cache-dir -r requirements.txt
-#
-#      - name: cache requirements.txt, if it was updated
-#        if: steps.cached_requirements.outputs.cache-hit != 'true'
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.cache/pip
-#          key: ${{ runner.os }}-requirements-${{ hashFiles('./requirements.txt') }}
+  install_requirements:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: pre actions/checkout
+        uses: actions/checkout@v4
+
+      - name: pre actions/setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: check if cached requirements.txt exist
+        id: cached_requirements
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-requirements-${{ hashFiles('./requirements.txt') }}
+
+      - name: install requirements.txt
+        if: steps.cached_requirements.outputs.cache-hit != 'true'
+        run: pip install --no-cache-dir -r requirements.txt
+
+      - name: cache requirements.txt, if it was updated
+        if: steps.cached_requirements.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-requirements-${{ hashFiles('./requirements.txt') }}
 
 
   create-semantic-version:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     name: "Bump version and create changelog with commitizen"
+
     steps:
       - name: Check out
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: "${{ secrets.GH_TOKEN }}"
-      - id: cz
-        name: Create bump and changelog
+
+      - name: Create bump and changelog
+        id: cz
         uses: commitizen-tools/commitizen-action@master
         with:
           github_token: ${{ secrets.GH_TOKEN }}
+
       - name: Print Version
-        run: echo "Bumped to version ${{ steps.cz.outputs.version }}"
+        run: |
+          echo "Bumped to version ${{ steps.cz.outputs.version }}"
+          echo "SEMANTIC_VERSION=${{ steps.cz.outputs.version }}" >> $GITHUB_ENV
 
 
-#  build_and_deploy_docker_image:
-#    runs-on: ubuntu-latest
-#    needs: create-semantic-version
-#
-#    env:
-#      DOCKERFILE_NAME: 'Dockerfile-gh-actions'
-#
-#    steps:
-#      - name: pre actions/checkout
-#        uses: actions/checkout@v4
-#
-#      - name: get cached requirement.txt
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.cache/pip
-#          key: ${{ runner.os }}-requirements-${{ hashFiles('./requirements.txt') }}
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v3
-#
-#      - name: Login to Docker Hub
-#        uses: docker/login-action@v3
-#        with:
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-#
-#      - name: Push to Dockerhub
-#        uses: docker/build-push-action@v6
-#        with:
-#          push: true
-#          context: .
-#          file: ${{ env.DOCKERFILE_NAME }}
-#          tags: ${{ secrets.DOCKERHUB_USERNAME }}/py-app:prod
+  build_and_deploy_docker_image:
+    runs-on: ubuntu-latest
+    needs: create-semantic-version
+
+    env:
+      DOCKERFILE_NAME: 'Dockerfile-gh-actions'
+
+    steps:
+      - name: pre actions/checkout
+        uses: actions/checkout@v4
+
+      - name: get cached requirement.txt
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-requirements-${{ hashFiles('./requirements.txt') }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push to Dockerhub
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: .
+          file: ${{ env.DOCKERFILE_NAME }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/py-app:${{ env.SEMANTIC_VERSION }}
