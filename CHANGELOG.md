@@ -1,3 +1,9 @@
+## 1.3.1 (2024-11-21)
+
+### Fix
+
+- flask installation on docker image
+
 ## 1.3.0 (2024-11-20)
 
 ### Feat
