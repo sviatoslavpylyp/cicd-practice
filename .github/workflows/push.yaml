@@ -73,7 +73,7 @@ jobs:
       DOCKERFILE_NAME: 'Dockerfile'
       AWS_REGION: 'us-west-2'
       IMAGE_TAG: ${{ needs.create-semantic-version.outputs.semantic_versioning }}
-      REPOSITORY: 'spylyp'
+      REPOSITORY: 'spylyp/py-app'
 
     steps:
       - name: Checkout Code
