@@ -1,3 +1,10 @@
+## 2.2.0 (2024-11-24)
+
+### Feat
+
+- test pusing to ecr
+- test pusing to ecr
+
 ## 2.1.0 (2024-11-24)
 
 ### Feat
